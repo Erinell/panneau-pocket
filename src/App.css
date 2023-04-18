@@ -1,0 +1,167 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+ color: #444;
+ padding-left: 1rem;
+}
+
+main{
+  display: flex;
+  height: 100vh;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.settings-btn {
+  padding: 5px 0 0 5px;
+}
+
+.settings-content {
+  margin: 10px;
+}
+
+.sidebar{
+  display: inline;
+  padding: 15px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 100%;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.page {
+  padding: 15px;
+  text-align: center;
+  background-color: #292929;
+  color: white;
+  overflow-y: auto;
+  height: 100%;
+  font-size: large;
+  text-decoration: none;
+}
+
+a:link {
+  color: #008cff;
+}
+
+.city {
+  display: flex;
+  margin: 0;
+  font-size: large;
+  color: #b3ff00;
+}
+
+.information {
+  display: flex;
+  margin: 0 0 20px 0;
+  font-size: smaller;
+  color: #c5c5c5;
+}
+
+.title {
+  font-size: larger;
+}
+
+.pagination {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+
+img {
+  width: 90%;
+}
+
+.favoris {
+  display: flex;
+  flex-direction: column;
+}
+
+.favoris-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 29rem;
+  border: none;  
+}
+
+.favoris-item {
+  width: 100%;
+}
+
+.favoris-delete-button {
+  width: 40px;
+  right: 4px;
+}
+
+@media (min-width: 900px) {
+  .left {
+    width: 30%;
+  }
+  .container {
+    width: 70%;
+  }
+} 
+
+ @media (min-width: 1024px) {
+  .left {
+    width: 25%;
+  }
+  .container {
+    width: 75%;
+  }
+} 
+
+
+@media (min-width: 1600px) {
+  .left {
+    width: 20%;
+  }
+  .container {
+    width: 80%;
+  }
+} 
+
+/* width */
+::-webkit-scrollbar {
+
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
