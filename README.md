@@ -1,4 +1,4 @@
-# Application PC Panneau Pocket
+# Panneau Pocket
 
 Ce projet est une application (non officiel) PC de l'application [Panneau Pocket](https://www.panneaupocket.com).
 
@@ -20,7 +20,7 @@ Remplacer `<os>` par un système d'exploitation.
 os      | format
 --------|-------
 `linux` | .deb
-`win`   | _
+`win`   | .exe
 `mac`   | _
 
 ## Installation
@@ -34,11 +34,6 @@ $ dpkg -i <package>.deb
 ```
 
 ## Todo
-- [x] Ajout de scrap la fenêtre pour + de possibilités
-- [x] Possibilité d'enregistrer les images
-- [x] Désactiver la fenêtre pour les redirection mailto: & tel:
-- [x] Ajout page paramètres
-- [x] Trier favoris par ordre alphabétique
 - [ ] Bug enregistrement fichier PDF
 - [ ] Ajout de thèmes
 - [ ] Possibilité de laisser tourner en arrière plan (lancement au démarrage)
