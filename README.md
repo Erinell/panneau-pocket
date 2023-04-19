@@ -37,7 +37,5 @@ $ dpkg -i <package>.deb
 - [ ] Bug enregistrement fichier PDF
 - [ ] Ajout de thèmes
 - [ ] Possibilité de laisser tourner en arrière plan (lancement au démarrage)
-- [ ] Modifier l'icone pour Windows
 - [ ] Système de notification bureau
 - [ ] Optimisations
-- [ ] Ajout un updater
