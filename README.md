@@ -30,7 +30,7 @@ Effectuer l'étape `Build` pour commencer.
 ### Linux
 ```
 $ cd dist
-$ dpkg -i <package>.deb
+$ ./<package>.AppImage
 ```
 
 ## Todo
