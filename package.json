@@ -38,7 +38,7 @@
     "electron:package:mac": "yarn build && electron-builder -m -c.extraMetadata.main=build/electron.js",
     "electron:package:win": "yarn build && electron-builder -w -c.extraMetadata.main=build/electron.js",
     "electron:package:linux": "yarn build && electron-builder -l -c.extraMetadata.main=build/electron.js",
-    "package": "electron-builder -w -l -c.extraMetadata.main=build/electron.js --publish never",
+    "package": "yarn build && electron-builder -w -l -c.extraMetadata.main=build/electron.js --publish never",
     "publish": "electron-builder build -w -l --publish always"
   },
   "eslintConfig": {
