@@ -6,6 +6,7 @@ import PanneauPocket from './Components/PanneauPocket';
 import TilesPagination from './Components/TilesPagination';
 import SettingsDrawer from './Components/SettingsDrawer';
 import { CircularProgress } from '@mui/material';
+import Updater from './Components/Updater';
 
 const panneauPocket = new PanneauPocket();
 
@@ -51,7 +52,6 @@ function App() {
       })
 
       const version = document.getElementById('version');
-
       ipcRenderer.invoke('version')
       .then(res => {
         version.innerHTML = 'v'+res.version
@@ -66,7 +66,7 @@ function App() {
 
   return (
     <div className="App">
-
+      <Updater/>
       <main id='root'>
         <div className='left'>
           <div className='settings-btn'>

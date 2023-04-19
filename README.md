@@ -18,8 +18,8 @@ $ yarn electron:package:<os>
 Remplacer `<os>` par un système d'exploitation.
 
 OS      | format
---------|-------
-`linux` | .deb
+--------|----------
+`linux` | .AppImage
 `win`   | .exe
 `mac`   | _
 
