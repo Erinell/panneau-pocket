@@ -10,8 +10,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 const { ipcRenderer } = window.require("electron");
 
 export default function Updater() {
-  const [open, setOpen] = React.useState(true);
-  const [status, setStatus] = React.useState({downloaded: true});
+  const [open, setOpen] = React.useState(false);
+  const [status, setStatus] = React.useState({});
 
   useEffect(() => {
     ipcRenderer.on("update-rcv", function (event, payload) {

@@ -157,7 +157,8 @@ autoUpdater.on('update-not-available', (info) => {
 
 autoUpdater.on('error', (err) => {
   sendStatusToWindow({
-    message: 'Impossible de mettre à jour.',
+    message: 'Mise à jour impossible.',
+    update: false,
     err: err
   });
 })
