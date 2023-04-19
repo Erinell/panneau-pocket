@@ -22,8 +22,18 @@ main{
   flex-direction: column;
   width: 40%;
 }
+.version {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 10px;
+  flex-wrap: wrap;
+  align-content: center;
+  color: #555;
+}
 
 .settings-btn {
+  display: flex;
   padding: 5px 0 0 5px;
 }
 

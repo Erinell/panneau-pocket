@@ -1,11 +1,12 @@
 {
   "name": "panneau-pocket",
-  "version": "1.5.0",
-  "private": true,
+  "version": "1.5.3",
+  "private": false,
   "author": "Cédric Debois <ceddebois@gmail.com>",
   "description": "Client Panneau Pocket.",
   "main": "public/electron.js",
   "homepage": "./",
+  "repository": "https://github.com/Erinell/panneau-pocket",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -18,6 +19,7 @@
     "electron-context-menu": "^3.6.1",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.1.0",
+    "electron-updater": "^5.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-iframe": "^1.8.5",
@@ -34,7 +36,9 @@
     "electron": "wait-on tcp:3000 && electron .",
     "electron:package:mac": "yarn build && electron-builder -m -c.extraMetadata.main=build/electron.js",
     "electron:package:win": "yarn build && electron-builder -w -c.extraMetadata.main=build/electron.js",
-    "electron:package:linux": "yarn build && electron-builder -l -c.extraMetadata.main=build/electron.js"
+    "electron:package:linux": "yarn build && electron-builder -l -c.extraMetadata.main=build/electron.js",
+    "package": "electron-builder -w -l -c.extraMetadata.main=build/electron.js --publish never",
+    "publish": "electron-builder build -w -l --publish always"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +57,7 @@
   "build": {
     "appId": "com.cedric.pocket",
     "productName": "Panneau Pocket",
+    "copyright": "Erinell",
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -64,12 +69,26 @@
       "target": "dmg"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "publish": {
+        "provider": "github",
+        "owner": "erinell",
+        "repo": "panneau-pocket"
+      }
     },
     "linux": {
       "icon": "build/icons/512x512.png",
       "target": "deb",
-      "category": "Network"
+      "category": "Network",
+      "publish": {
+        "provider": "github",
+        "owner": "erinell",
+        "repo": "panneau-pocket"
+      }
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "erinell"
     }
   },
   "devDependencies": {

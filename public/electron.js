@@ -1,10 +1,11 @@
 const path = require('path');
 
-const { app,shell, BrowserWindow } = require('electron');
+const { app,shell, BrowserWindow, dialog } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const {ipcMain} = require('electron')
 const contextMenu = require('electron-context-menu');
+const { autoUpdater } = require('electron-updater');
 
 contextMenu({
   showInspectElement: false,
@@ -52,9 +53,16 @@ function createWindow() {
     win.webContents.openDevTools({ mode: 'detach' });
   }
 
+  win.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  autoUpdater.checkForUpdates();
+  createWindow();
+  // vérifie si mise à jour disponible
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -100,4 +108,48 @@ ipcMain.handle('fetch', async (event, url) => {
 
 ipcMain.on('clear', (event) => {
   store.clear();
+});
+
+ipcMain.handle('version', (event, arg) => {
+  return {
+   version: app.getVersion(),
+   platform: process.platform
+  };
+ });
+
+autoUpdater.on("update-available", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+     type: 'info',
+     buttons: ['Ok'],
+     title: 'Update Available',
+     message: process.platform === 'win32' ? releaseNotes : releaseName,
+     detail: 'A new version download started. The app will be restarted to install the update.'
+  };
+  dialog.showMessageBox(dialogOpts);
+
+});
+
+autoUpdater.on("update-not-available", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+     type: 'info',
+     buttons: ['Ok'],
+     title: 'Aucune mise à jour disponible',
+     message: process.platform === 'win32' ? releaseNotes : releaseName,
+     detail: 'A new version download started. The app will be restarted to install the update.'
+  };
+  dialog.showMessageBox(dialogOpts);
+
+});
+
+autoUpdater.on("update-downloaded", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+     type: "info",
+     buttons: ["Restart", "Later"],
+     title: "Application Update",
+     message: process.platform === "win32" ? releaseNotes : releaseName,
+     detail: "A new version has been downloaded. Restart the application to apply the updates."
+  };
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+     if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  });
 });

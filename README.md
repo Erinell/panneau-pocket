@@ -17,7 +17,7 @@ $ yarn electron:package:<os>
 ```
 Remplacer `<os>` par un système d'exploitation.
 
-os      | format
+OS      | format
 --------|-------
 `linux` | .deb
 `win`   | .exe
@@ -40,3 +40,4 @@ $ dpkg -i <package>.deb
 - [ ] Modifier l'icone pour Windows
 - [ ] Système de notification bureau
 - [ ] Optimisations
+- [ ] Ajout un updater

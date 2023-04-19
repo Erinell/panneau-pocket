@@ -49,6 +49,13 @@ function App() {
         updateTiles(resJSON.id);
         loadPage(resJSON.id);
       })
+
+      const version = document.getElementById('version');
+
+      ipcRenderer.invoke('version')
+      .then(res => {
+        version.innerHTML = 'v'+res.version
+      })
   }, []);
 
   const updateTiles = async (id) => {
@@ -64,6 +71,7 @@ function App() {
         <div className='left'>
           <div className='settings-btn'>
             <SettingsDrawer />
+            <div id='version' className='version'></div>
           </div>
 
           <div className='sidebar'>
