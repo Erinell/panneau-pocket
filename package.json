@@ -3,7 +3,7 @@
   "version": "1.5.3",
   "private": false,
   "author": "Cédric Debois <ceddebois@gmail.com>",
-  "description": "Client Panneau Pocket.",
+  "description": "Client Panneau Pocket",
   "main": "public/electron.js",
   "homepage": "./",
   "repository": "https://github.com/Erinell/panneau-pocket",
