@@ -37,5 +37,5 @@ $ ./<package>.AppImage
 - [ ] Bug enregistrement fichier PDF
 - [ ] Ajout de thèmes
 - [ ] Possibilité de laisser tourner en arrière plan (lancement au démarrage)
-- [ ] Système de notification bureau
-- [ ] Optimisations
+- [ ] Système de notification bureau (en cours)
+- [ ] Optimisations (en cours)
