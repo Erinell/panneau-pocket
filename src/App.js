@@ -38,35 +38,39 @@ function App() {
   }
 
   const loadPage = async (villeId, tileId) => {
-    let pageDom = await panneauPocket.getPageDom(`https://app.panneaupocket.com/embeded/${villeId}/${tileId ? tileId : ''}`);
-    contentRef.current.replaceChildren(pageDom);
+    panneauPocket.getPageDom(`${villeId}/${tileId ? tileId : ''}`)
+      .then(res => {
+        contentRef.current.replaceChildren(res);
+      })
+      .catch(err => {
+        contentRef.current.replaceChildren("Cherchez un nom de ville pour voir les informations ici.");
+      })
   }
 
   useEffect(() => {
-    ipcRenderer.invoke('load', 'ville')
-      .then(res => {
-        const resJSON = res ? JSON.parse(res) : {};
-        setSelectedVille(resJSON);
-        updateTiles(resJSON.id);
-        loadPage(resJSON.id);
-      })
+    ipcRenderer.invoke('load', 'ville').then(res => {
+      const resJSON = res ? JSON.parse(res) : {};
+      setSelectedVille(resJSON);
+      updateTiles(resJSON.id);
+      loadPage(resJSON.id);
+    })
 
-      const version = document.getElementById('version');
-      ipcRenderer.invoke('version')
-      .then(res => {
-        version.innerHTML = 'v'+res.version
-      })
+    const version = document.getElementById('version');
+
+    ipcRenderer.invoke('version').then(res => {
+      version.innerHTML = 'v' + res.version
+    })
   }, []);
 
   const updateTiles = async (id) => {
     setTiles([]);
-    let tiles = await panneauPocket.getTiles(`https://app.panneaupocket.com/embeded/${id}`);
+    let tiles = await panneauPocket.updateCityTiles(id);
     setTiles(tiles);
   }
 
   return (
     <div className="App">
-      <Updater/>
+      <Updater />
       <main id='root'>
         <div className='left'>
           <div className='settings-btn'>
@@ -76,7 +80,7 @@ function App() {
 
           <div className='sidebar'>
             <Dropdown onChange={handleChangeVille} />
-            <Favoris onSelect={handleChangeVille} selectedVille={selectedVille} disabled={disableFav} />
+            <Favoris panneauPocket={panneauPocket} onSelect={handleChangeVille} selectedVille={selectedVille} disabled={disableFav} />
           </div>
         </div>
         <div className='container'>

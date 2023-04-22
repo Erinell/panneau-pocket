@@ -1,12 +1,14 @@
 const path = require('path');
 
-const { app, shell, BrowserWindow, dialog } = require('electron');
+const { app, shell, BrowserWindow, dialog, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const { ipcMain } = require('electron')
 const contextMenu = require('electron-context-menu');
 const { autoUpdater } = require('electron-updater');
 
+let store = new Store();
+let win;
 contextMenu({
   showInspectElement: false,
   showSaveImageAs: true,
@@ -17,14 +19,12 @@ contextMenu({
   }
 });
 
-let win;
 function sendStatusToWindow(payload) {
   win.webContents.send('update-rcv', payload);
 }
 
-let store = new Store();
 function createWindow() {
-  // Create the browser window.
+
   win = new BrowserWindow({
     title: "Panneau Pocket",
     width: 700,
@@ -45,18 +45,14 @@ function createWindow() {
   });
   win.setMenuBarVisibility(false);
 
-
-  // and load the index.html of the app.
-  // win.loadFile("index.html");
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
-  // Open the DevTools.
+
   if (isDev) {
     win.webContents.openDevTools({ mode: 'detach' });
-    // process.env.APPIMAGE = path.join(__dirname, 'dist', `panneau-pocket_${app.getVersion()}_amd64.deb`)
   }
 
 }
@@ -64,7 +60,6 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
-  // vérifie si mise à jour disponible
 });
 
 app.on('window-all-closed', () => {
@@ -112,6 +107,14 @@ ipcMain.handle('fetch', async (event, url) => {
 ipcMain.on('clear', (event) => {
   store.clear();
 });
+
+ipcMain.on('notify', (event, title, body) => {
+  new Notification({
+    icon: path.join(__dirname, '/icons/linux-512x512.png'),
+    title: title,
+    body: body,
+  }).show();
+})
 
 ipcMain.handle('version', (event, arg) => {
   return {
