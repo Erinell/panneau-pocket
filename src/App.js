@@ -16,6 +16,7 @@ function App() {
   const [selectedVille, setSelectedVille] = useState({});
   const [disableFav, setDisableFav] = useState(false);
   const [tiles, setTiles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const contentRef = useRef(null);
 
   const handleChangeVille = async (ville) => {
@@ -24,7 +25,7 @@ function App() {
       await updateTiles(ville.id);
       setSelectedVille(ville);
       ipcRenderer.send('save', 'ville', JSON.stringify(ville));
-      loadPage(ville.id);
+      handleChangePage(ville.id);
       setDisableFav(false);
       return;
     }
@@ -32,9 +33,9 @@ function App() {
     ipcRenderer.send('save', 'ville', JSON.stringify({}));
   }
 
-  const handleChangePage = async (page) => {
-    // setSelectedPage(page);
-    loadPage(selectedVille.id, tiles[page])
+  const handleChangePage = async (villeId, page) => {
+    setCurrentPage(page ? page : 0);
+    loadPage(villeId, tiles[page])
   }
 
   const loadPage = async (villeId, tileId) => {
@@ -52,7 +53,7 @@ function App() {
       const resJSON = res ? JSON.parse(res) : {};
       setSelectedVille(resJSON);
       updateTiles(resJSON.id);
-      loadPage(resJSON.id);
+      handleChangePage(resJSON.id);
     })
 
     const version = document.getElementById('version');
@@ -87,9 +88,7 @@ function App() {
           {!disableFav ? <div className='page' ref={contentRef}></div> : null}
 
           {disableFav ? <div className='loading' ><CircularProgress /></div> : null}
-
-          <TilesPagination tiles={tiles} onChange={handleChangePage} />
-
+          <TilesPagination tiles={tiles} onChange={(page) => {handleChangePage(selectedVille.id, page)}} page={currentPage}/>
         </div>
       </main>
     </div>
