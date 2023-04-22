@@ -42,8 +42,10 @@ main{
 }
 
 .sidebar{
-  display: inline;
+  display: flex;
+  flex-direction: column;
   padding: 15px;
+  height: 100vh;
 }
 
 .container {
@@ -104,26 +106,37 @@ img {
 }
 
 .favoris {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  position: relative;
 }
 
 .favoris-list {
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  max-height: 29rem;
   border: none;  
+  max-height: 50%;
 }
 
 .favoris-item {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 90px;
+  gap: 5px;
+}
+
+.favoris-add-button {
   width: 100%;
 }
 
-.favoris-delete-button {
-  width: 40px;
-  right: 4px;
+.favoris-clear-button {
+  width: 100%;
 }
+
+.favoris-clear-container {
+  position: absolute;
+  padding-top: 15px;
+  width: 100%;
+}
+
 
 @media (min-width: 900px) {
   .left {
@@ -157,7 +170,7 @@ img {
   width: 5px;
 }
 
-::-webkit-scrollbar-track {
+.page::-webkit-scrollbar-track {
   border-radius: 5px;
   background: #555; 
 }
