@@ -94,13 +94,13 @@ export default class PanneauPocket {
     return new Promise(async (resolve, reject) => {
       for (let i = 0; i < this.notify.length; i++) {
         let tiles = await this.getTiles(this.notify[i]);
+        if(!this.tiles[this.notify[i]] || tiles) return;
         // TODO: améliorer la méthode de détection de nouvelles tiles
         // actuellement : trigger si modif du nb ou d'un id
         // idées :
         // - vérifier si maj d'un tuile
         // - séparer le nb de tuile (si + alors ajout, si - alors suppression)
         //    - calculer le delta pour savoir combien en - ou +
-
         if (this.tiles[this.notify[i]].join() !== tiles.join()) {
           resolve(this.favoris.filter(v => v.id === this.notify[i]));
         }

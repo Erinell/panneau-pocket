@@ -52,7 +52,7 @@ export default function Favoris({
     }, 0.25 * 60 * 60 * 1000); //0.25 * 60 * 60 * 1000 1/4 d'heure
 
     return () => clearInterval(update);
-  }, [selectedVille]);
+  }, [selectedVille, panneauPocket]);
 
   const updateFavoris = (favoris) => {
     setFavoris(favoris);
