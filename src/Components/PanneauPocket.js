@@ -65,7 +65,7 @@ export default class PanneauPocket {
     while (nextUrl !== "") {
       await ipcRenderer.invoke('fetch', nextUrl)
         .then(res => {
-          var page = document.createElement('html');
+          let page = document.createElement('html');
           page.innerHTML = res;
           let nextId = this.getTileIdByUrl(nextUrl);
           tiles.push(nextId);
@@ -94,7 +94,7 @@ export default class PanneauPocket {
     return new Promise(async (resolve, reject) => {
       for (let i = 0; i < this.notify.length; i++) {
         let tiles = await this.getTiles(this.notify[i]);
-        if(!this.tiles[this.notify[i]] || tiles) return;
+        if(!this.tiles[this.notify[i]] || !tiles) return;
         // TODO: améliorer la méthode de détection de nouvelles tiles
         // actuellement : trigger si modif du nb ou d'un id
         // idées :
@@ -102,6 +102,7 @@ export default class PanneauPocket {
         // - séparer le nb de tuile (si + alors ajout, si - alors suppression)
         //    - calculer le delta pour savoir combien en - ou +
         if (this.tiles[this.notify[i]].join() !== tiles.join()) {
+          this.updateCityTiles(this.notify[i]);
           resolve(this.favoris.filter(v => v.id === this.notify[i]));
         }
         resolve(false);
