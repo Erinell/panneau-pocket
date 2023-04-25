@@ -60,6 +60,10 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdates();
+  
+  if(process.platform === 'win32') {
+    app.setAppUserModelId(app.name);
+  }
 });
 
 app.on('window-all-closed', () => {
@@ -113,6 +117,7 @@ ipcMain.on('notify', (event, title, body) => {
     icon: path.join(__dirname, '/icons/linux-512x512.png'),
     title: title,
     body: body,
+    silent: false
   }).show();
 })
 
