@@ -45,11 +45,12 @@ export default function Favoris({
         if (!ville) return;
         ipcRenderer.send(
           "notify",
-          ville.name,
-          "Une nouvelle information est apparue !"
+          ville[0].name,
+          `Une nouvelle information est apparue  à ${ville[0].name} !`
         );
+        onSelect(selectedCity);
       });
-    }, 0.25 * 60 * 60 * 1000); //0.25 * 60 * 60 * 1000 1/4 d'heure
+    }, 10 * 60 * 1000); //0.25 * 60 * 60 * 1000 1/4 d'heure
 
     return () => clearInterval(update);
   }, [selectedVille, panneauPocket]);

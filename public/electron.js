@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { app, shell, BrowserWindow, dialog, Notification } = require('electron');
+const { app, shell, BrowserWindow, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const { ipcMain } = require('electron')
@@ -50,19 +50,17 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
-
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
-
 }
 
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdates();
-  
+
   if(process.platform === 'win32') {
     app.setAppUserModelId(app.name);
+  }
+  if (isDev) {
+    win.webContents.openDevTools({ mode: 'detach' });
   }
 });
 
