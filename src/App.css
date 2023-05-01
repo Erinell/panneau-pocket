@@ -75,7 +75,7 @@ main{
 }
 
 .overlay {
-  --picture-width : 600px;
+  --picture-width : 90%;
   position: absolute;
   width: var(--picture-width);
   margin-left: calc(-1*var(--picture-width) / 2);
