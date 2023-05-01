@@ -1,11 +1,11 @@
 const path = require('path');
-
 const { app, shell, BrowserWindow, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
-const { ipcMain } = require('electron')
+const { ipcMain } = require('electron');
 const contextMenu = require('electron-context-menu');
-const { autoUpdater } = require('electron-updater');
+const updater = require('./electron-updater');
+const tray = require('./electron-tray');
 
 let store = new Store();
 let win;
@@ -18,10 +18,6 @@ contextMenu({
     saveImageAs: 'Enregistrer sous...'
   }
 });
-
-function sendStatusToWindow(payload) {
-  win.webContents.send('update-rcv', payload);
-}
 
 function createWindow() {
 
@@ -50,12 +46,15 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
+
+  tray.init();
 }
 
 app.whenReady().then(() => {
   createWindow();
-  autoUpdater.checkForUpdates();
-
+  updater.checkUpdate();
+  updater.registerEvents(win);
+  
   if(process.platform === 'win32') {
     app.setAppUserModelId(app.name);
   }
@@ -120,69 +119,9 @@ ipcMain.on('notify', (event, title, body) => {
 })
 
 ipcMain.handle('version', (event, arg) => {
-  return {
-    version: app.getVersion(),
-    platform: process.platform
-  };
+  return updater.getVersion();
 });
-
-ipcMain.handle('update', (event) => {
-  return new Promise((resolve, reject) => {
-    autoUpdater.checkForUpdatesAndNotify()
-      .then(res => resolve(res))
-  });
-})
 
 ipcMain.on('update-apply', (event) => {
-  autoUpdater.quitAndInstall();
+  updater.exitAndInstall();
 })
-
-autoUpdater.on('checking-for-update', () => {
-
-  sendStatusToWindow({
-    message: 'Vérification mise à jour...'
-  });
-})
-
-autoUpdater.on("update-available", (_event, releaseNotes, releaseName) => {
-  sendStatusToWindow({
-    message: 'Une nouvelle version est disponible.',
-    update: true,
-    releaseNotes: releaseNotes,
-    releaseName: releaseName
-  });
-});
-
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow({
-    message: 'Dernière version déjà installée.',
-    update: false,
-    info: info
-  });
-})
-
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow({
-    message: 'Mise à jour impossible.',
-    update: false,
-    err: err
-  });
-})
-
-autoUpdater.on('download-progress', (progressObj) => {
-  sendStatusToWindow({
-    message: 'Téléchargement en cours',
-    downloadSpeed: progressObj.bytesPerSecond,
-    percent: progressObj.percent,
-    size: progressObj.transferred,
-    sizeTotal: progressObj.total
-  });
-})
-
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow({
-    message: 'Mise à jour téléchargée',
-    downloaded: true,
-    version: info.version
-  });
-});
