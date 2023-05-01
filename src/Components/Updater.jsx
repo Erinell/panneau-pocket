@@ -30,7 +30,6 @@ export default function Updater() {
     console.log(e);
     if(e.type === "click" && e.target.localName !== 'button') return;
     setOpen(false);
-    console.log("test");
     ipcRenderer.send("update-apply");
   };
 
