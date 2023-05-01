@@ -41,14 +41,19 @@ export default function Favoris({
     });
 
     const update = setInterval(() => {
-      panneauPocket.checkNotifier().then((ville) => {
-        if (!ville) return;
-        ipcRenderer.send(
-          "notify",
-          ville[0].name,
-          `Une nouvelle information est apparue  à ${ville[0].name} !`
-        );
-        onSelect(selectedCity);
+      panneauPocket.checkNotifier().then((villes) => {
+        console.log("check");
+        if (!villes) return;
+        console.log(villes);
+        //TODO: vérifier fonctionnement multi villes
+        villes.forEach(ville => {
+          ipcRenderer.send(
+            "notify",
+            ville.name,
+            `Une nouvelle information est apparue  à ${ville.name} !`
+          );
+          onSelect(selectedCity);
+        });
       });
     }, 10 * 60 * 1000); //0.25 * 60 * 60 * 1000 1/4 d'heure
 
