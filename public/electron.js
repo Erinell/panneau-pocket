@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, shell, BrowserWindow, Notification } = require('electron');
+const { app, shell, BrowserWindow, Notification, dialog } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const { ipcMain } = require('electron');
@@ -47,7 +47,12 @@ function createWindow() {
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
-  tray.init();
+  win.on('close', async e => {
+    e.preventDefault();
+    win.hide();
+  })
+
+  tray.init(win);
 }
 
 app.whenReady().then(() => {
@@ -63,9 +68,9 @@ app.whenReady().then(() => {
   }
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', (event) => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    // app.quit();
   }
 });
 
