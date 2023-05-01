@@ -9,6 +9,8 @@ const tray = require('./electron-tray');
 
 let store = new Store();
 let win;
+const gotTheLock = app.requestSingleInstanceLock()
+
 contextMenu({
   showInspectElement: false,
   showSaveImageAs: true,
@@ -55,78 +57,91 @@ function createWindow() {
   tray.init(win);
 }
 
-app.whenReady().then(() => {
-  createWindow();
-  updater.checkUpdate();
-  updater.registerEvents(win);
-  
-  if(process.platform === 'win32') {
-    app.setAppUserModelId(app.name);
-  }
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
-});
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.show();
+      win.focus();
+    }
+  })
 
-app.on('window-all-closed', (event) => {
-  if (process.platform !== 'darwin') {
-    // app.quit();
-  }
-});
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
+  app.whenReady().then(() => {
     createWindow();
-  }
-});
+    updater.checkUpdate();
+    updater.registerEvents(win);
 
-app.on('web-contents-created', (_, webContents) => {
-  webContents.on('did-fail-load', (event, errorCode) => console.log('did-fail-load'));
-
-  webContents.on('did-create-window', function (win, details) {
-    // details.url
-    win.setMenuBarVisibility(false);
-
-    if (details.url.startsWith('mailto:') || details.url.startsWith('tel:')) {
-      win.close();
-      shell.openExternal(details.url);
+    if (process.platform === 'win32') {
+      app.setAppUserModelId(app.name);
+    }
+    if (isDev) {
+      win.webContents.openDevTools({ mode: 'detach' });
     }
   });
-});
-
-ipcMain.on('save', (event, label, value) => {
-  store.set(label, value);
-});
-
-ipcMain.handle('load', (event, label) => {
-  const result = store.get(label)
-  return result
-})
-
-ipcMain.handle('fetch', async (event, url) => {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(res => resolve(res.text()))
+  
+  app.on('window-all-closed', (event) => {
+    if (process.platform !== 'darwin') {
+      // app.quit();
+    }
   });
-})
 
-ipcMain.on('clear', (event) => {
-  store.clear();
-});
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
 
-ipcMain.on('notify', (event, title, body) => {
-  new Notification({
-    icon: path.join(__dirname, '/icons/linux-512x512.png'),
-    title: title,
-    body: body,
-    silent: false
-  }).show();
-})
+  app.on('web-contents-created', (_, webContents) => {
+    webContents.on('did-fail-load', (event, errorCode) => console.log('did-fail-load'));
 
-ipcMain.handle('version', (event, arg) => {
-  return updater.getVersion();
-});
+    webContents.on('did-create-window', function (win, details) {
+      // details.url
+      win.setMenuBarVisibility(false);
 
-ipcMain.on('update-apply', (event) => {
-  updater.exitAndInstall();
-})
+      if (details.url.startsWith('mailto:') || details.url.startsWith('tel:')) {
+        win.close();
+        shell.openExternal(details.url);
+      }
+    });
+  });
+
+  ipcMain.on('save', (event, label, value) => {
+    store.set(label, value);
+  });
+
+  ipcMain.handle('load', (event, label) => {
+    const result = store.get(label)
+    return result
+  })
+
+  ipcMain.handle('fetch', async (event, url) => {
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(res => resolve(res.text()))
+    });
+  })
+
+  ipcMain.on('clear', (event) => {
+    store.clear();
+  });
+
+  ipcMain.on('notify', (event, title, body) => {
+    new Notification({
+      icon: path.join(__dirname, '/icons/linux-512x512.png'),
+      title: title,
+      body: body,
+      silent: false
+    }).show();
+  })
+
+  ipcMain.handle('version', (event, arg) => {
+    return updater.getVersion();
+  });
+
+  ipcMain.on('update-apply', (event) => {
+    updater.exitAndInstall();
+  })
+}
