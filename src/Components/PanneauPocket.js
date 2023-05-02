@@ -97,7 +97,6 @@ export default class PanneauPocket {
       for (let i = 0; i < this.notify.length; i++) {
         let tiles = await this.getTiles(this.notify[i]);
         if(!this.tiles[this.notify[i]]) this.updateCityTiles(this.notify[i]);
-        console.log(this.tiles[this.notify[i]], tiles);
         if(!this.tiles[this.notify[i]] || !tiles) continue;
         // TODO: améliorer la méthode de détection de nouvelles tiles
         // actuellement : trigger si modif du nb ou d'un id
