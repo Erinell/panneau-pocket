@@ -27,7 +27,6 @@ export default function Updater() {
   };
 
   const handleClose = (e) => {
-    console.log(e);
     if(e.type === "click" && e.target.localName !== 'button') return;
     setOpen(false);
     ipcRenderer.send("update-apply");

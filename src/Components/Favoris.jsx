@@ -42,9 +42,7 @@ export default function Favoris({
 
     const update = setInterval(() => {
       panneauPocket.checkNotifier().then((villes) => {
-        console.log("check");
         if (!villes) return;
-        console.log(villes);
         //TODO: vérifier fonctionnement multi villes
         villes.forEach(ville => {
           ipcRenderer.send(

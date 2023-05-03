@@ -24,7 +24,6 @@ export default class PanneauPocket {
   addNotifier(id) {
     if (this.notify.includes(id)) return;
     this.notify.push(id);
-    console.log(this.notify);
     ipcRenderer.send('save', 'notifier', [...this.notify]);
     return this.notify;
   }
@@ -96,9 +95,11 @@ export default class PanneauPocket {
     return new Promise(async (resolve, reject) => {
       for (let i = 0; i < this.notify.length; i++) {
         let tiles = await this.getTiles(this.notify[i]);
-        if(!this.tiles[this.notify[i]]) this.updateCityTiles(this.notify[i]);
-        console.log(this.tiles[this.notify[i]], tiles);
-        if(!this.tiles[this.notify[i]] || !tiles) continue;
+        if (!this.tiles[this.notify[i]]) {
+          this.updateCityTiles(this.notify[i]);
+          continue;
+        };
+        if (!tiles) continue;
         // TODO: améliorer la méthode de détection de nouvelles tiles
         // actuellement : trigger si modif du nb ou d'un id
         // idées :
@@ -109,8 +110,8 @@ export default class PanneauPocket {
           this.updateCityTiles(this.notify[i]);
           resolve(this.favoris.filter(v => v.id === this.notify[i]));
         }
-        resolve(false);
       }
+      resolve(false);
     })
   }
 
@@ -124,7 +125,7 @@ export default class PanneauPocket {
           try {
             page.innerHTML = _page.querySelectorAll('.infos')[0].innerHTML;
             page.innerHTML += _page.querySelectorAll('.sign-preview__content')[0].innerHTML;
-            if(_page.querySelector('.overlay')){
+            if (_page.querySelector('.overlay')) {
               page.querySelector('.overlay').src = AlertLifted;
             }
             resolve(page);
