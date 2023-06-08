@@ -36,6 +36,11 @@ $ ./<package>.AppImage
 ## Todo
 - [ ] Bug enregistrement fichier PDF
 - [ ] Ajout de thèmes
-- [ ] Possibilité de laisser tourner en arrière plan (lancement au démarrage)
-- [ ] Système de notification bureau (en cours)
 - [ ] Optimisations (en cours)
+
+## 1.6.2
+### Notes
+- Ajout d'un overlay lorsqu'un évènement est annulé.
+- Ajout d'une option pour lancer Panneau Pocket au démarrage.
+- Mise à jour de la base de donnée des villes.
+- Ajout de l'argument `--background` pour lancer en arrière plan.
