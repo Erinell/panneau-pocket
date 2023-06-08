@@ -1,6 +1,6 @@
 {
   "name": "panneau-pocket",
-  "version": "1.6.1",
+  "version": "1.6.3",
   "private": false,
   "author": "Cédric Debois <ceddebois@gmail.com>",
   "description": "Client Panneau Pocket",
@@ -16,6 +16,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "auto-launch": "^5.0.5",
     "concurrently": "^8.0.1",
     "cross-env": "^7.0.3",
     "electron-context-menu": "^3.6.1",
@@ -27,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-iframe": "^1.8.5",
     "react-scripts": "5.0.1",
+    "source-map-explorer": "^2.5.3",
     "wait-on": "^7.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -35,6 +37,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "dev": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
     "electron:package:mac": "yarn build && electron-builder -m -c.extraMetadata.main=build/electron.js",
