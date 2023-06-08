@@ -3,12 +3,21 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import FormControlLabel from '@mui/material/FormControlLabel';
 import SettingsIcon from "@mui/icons-material/Settings";
+import Switch from '@mui/material/Switch';
 import { IconButton } from "@mui/material";
+const { ipcRenderer } = window.require('electron');
 
 export default function SettingsDrawer() {
   const [open, setOpen] = React.useState(false);
+  const [runBoot, setRunBoot] = React.useState(false);
+
+  React.useEffect(() => {
+    ipcRenderer.invoke("is-run-boot").then((isEnable) => {
+      setRunBoot(isEnable);
+    });
+  }, []);
 
   const toggleDrawer = (_open) => (event) => {
     if (
@@ -21,6 +30,11 @@ export default function SettingsDrawer() {
     setOpen(_open);
   };
 
+  const handleRunOnBoot = (e) => {
+    setRunBoot(e.target.checked);
+    ipcRenderer.send('run-boot', e.target.checked);
+  }
+
   const list = () => (
     <Box
       className="settings-content"
@@ -31,7 +45,8 @@ export default function SettingsDrawer() {
       <List>
         <h2>Options</h2>
         <ListItem disablePadding>
-          <ListItemText primary={"prochainement..."} />
+          {/* <ListItemText primary={"prochainement..."} /> */}
+          <FormControlLabel control={<Switch onChange={(e) => handleRunOnBoot(e)} checked={runBoot}/>} label="Lancer au démarrage du système" />
         </ListItem>
       </List>
     </Box>
@@ -48,7 +63,7 @@ export default function SettingsDrawer() {
       </IconButton>
       <Drawer
         PaperProps={{
-          sx: { width: "15rem" },
+          sx: { width: "16rem" },
         }}
         anchor={"left"}
         open={open}

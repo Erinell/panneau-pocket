@@ -1,11 +1,12 @@
 const path = require('path');
-const { app, shell, BrowserWindow, Notification, dialog } = require('electron');
+const { app, shell, BrowserWindow, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 const Store = require('electron-store');
 const { ipcMain } = require('electron');
 const contextMenu = require('electron-context-menu');
 const updater = require('./electron-updater');
 const tray = require('./electron-tray');
+const AutoLaunch = require('auto-launch');
 
 let store = new Store();
 let win;
@@ -68,9 +69,17 @@ if (!gotTheLock) {
     }
   })
 
+  if (!isDev) {
+    var AutoLauncher = new AutoLaunch({
+      name: app.getName(),
+      path: process.platform === 'win32' ? app.getPath('exe') : app.getAppPath()
+    });
+  }
 
   app.whenReady().then(() => {
     createWindow();
+    if ((process.argv || []).indexOf('--background') !== -1) win.hide();
+
     updater.checkUpdate();
     updater.registerEvents(win);
 
@@ -81,7 +90,7 @@ if (!gotTheLock) {
       win.webContents.openDevTools({ mode: 'detach' });
     }
   });
-  
+
   app.on('window-all-closed', (event) => {
     if (process.platform !== 'darwin') {
       // app.quit();
@@ -143,5 +152,29 @@ if (!gotTheLock) {
 
   ipcMain.on('update-apply', (event) => {
     updater.exitAndInstall();
+  });
+
+  ipcMain.handle('is-run-boot', (event) => {
+    if (!AutoLauncher) return;
+    return new Promise((resolve, reject) => {
+      AutoLauncher.isEnabled().then(isEnable => {
+        resolve(isEnable);
+      });
+    });
   })
+
+  ipcMain.on('run-boot', (event, value) => {
+    if (isDev || !AutoLauncher) return;
+    if (!value) {
+      AutoLauncher.disable();
+      return;
+    }
+    AutoLauncher.isEnabled()
+      .then(isEnabled => {
+        if (isEnabled) {
+          return;
+        }
+        AutoLauncher.enable();
+      });
+  });
 }
