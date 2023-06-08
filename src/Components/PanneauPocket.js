@@ -1,4 +1,5 @@
 import AlertLifted from '../assets/alert_lifted.png';
+import Canceled from '../assets/canceled.png';
 const { ipcRenderer } = window.require('electron');
 
 export default class PanneauPocket {
@@ -125,7 +126,12 @@ export default class PanneauPocket {
           try {
             page.innerHTML = _page.querySelectorAll('.infos')[0].innerHTML;
             page.innerHTML += _page.querySelectorAll('.sign-preview__content')[0].innerHTML;
-            if (_page.querySelector('.overlay')) {
+            let overlay = _page.querySelector('.overlay');
+            // page.style.color = "tomato";
+            if (overlay && overlay.src.includes("canceled")) {
+              page.querySelector('.overlay').src = Canceled;
+            }
+            if(overlay && overlay.src.includes("alert")) {
               page.querySelector('.overlay').src = AlertLifted;
             }
             resolve(page);
